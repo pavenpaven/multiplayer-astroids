@@ -3,7 +3,7 @@ from conf import *
 import json
 import math
 from typing import Tuple
-from dataclasses import dataclass
+from dataclasses import dataclass, asdict
 
 def vec_add(v, w):
     return v[0]+w[0], v[1]+w[1]
@@ -26,7 +26,7 @@ class Ship:
         self.angle = angle
 
     def as_json(self):
-        return json.dumps({"pos": self.pos, "velocity": self.velocity, "angle": self.angle})
+        return json.dumps({"pos": self.pos, "velocity": self.velocity, "angle": self.angle, "type": "Ship"})
 
     @classmethod
     def from_json(cls, data):
@@ -70,7 +70,7 @@ class Bullet:
         return cls(dic["pos"], dic["velocity"])
 
     def as_json(self):
-        return json.dumps(asdict(self))
+        return json.dumps({**asdict(self), "type": "Bullet"})
 
     @property
     def rect(self):
@@ -83,3 +83,8 @@ class Bullet:
     def update(self, delta_time):
         self.pos = vec_add(self.pos, scaler_vec_mul(delta_time, self.velocity))
         self.pos = (self.pos[0]%600, self.pos[1]%600)
+
+ACTORS = [Ship, Bullet]
+def actor_from_json(data):
+    dat = json.loads(json.loads(data))
+    return list(filter(lambda x: x.__name__ == dat["type"], ACTORS))[0].from_json(json.loads(data))

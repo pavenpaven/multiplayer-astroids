@@ -5,16 +5,18 @@ import math
 import time
 import threading
 from conf import *
-from src.game import vec_add, scaler_vec_mul, SIZE, UPDATE_DELAY, TEXTURES, Ship, Bullet
+from src.game import vec_add, scaler_vec_mul, SIZE, UPDATE_DELAY, TEXTURES, Ship, Bullet, actor_from_json
 import src.game as game
 
 if __name__ == "__main__":
     window = pygame.display.set_mode((600,600)) 
 
+MAX_DATA_RESEVE = 1024
 
 def main():
     ship1 =  Ship((100,100), (0,0), 0)
     actors =  [[]] #ugly i know
+    added_actors = [[]]
     running = True
     clock = pygame.time.Clock()
     framecount = 0
@@ -27,9 +29,12 @@ def main():
             s.connect((HOST, PORT))
             while running:
                 time.sleep(UPDATE_DELAY)
-                s.sendall(f"{ship1.as_json()}".encode())
-                data = s.recv(1024).decode()
-                actors[0] = list(map(Ship.from_json, json.loads(data)))
+                added_actors_json = json.dumps(list(map(lambda x: x.as_json(), added_actors[0])))
+                added_actors[0] = []
+                dat = json.dumps({"added_actors": added_actors_json, "ship": ship1.as_json()})
+                s.sendall(f"{dat}".encode())
+                data = s.recv(MAX_DATA_RESEVE).decode()
+                actors[0] = list(map(lambda x:actor_from_json(json.dumps(x)), json.loads(data)))
             s.sendall("stop".encode())
 
     threading.Thread(target=client).start()
@@ -68,8 +73,11 @@ def main():
             if i.type == pygame.KEYDOWN:
                 if i.key == pygame.K_o:
                     actors[0].append(Bullet(ship1.pos, scaler_vec_mul(game.BULLET_SPEED,
-                                                                      (-math.sin(ship1.angle*math.pi/360),
-                                                                       -math.cos(ship1.angle*math.pi/360)))))
+                                                                      (-math.sin(2*ship1.angle*math.pi/360),
+                                                                       -math.cos(2*ship1.angle*math.pi/360)))))
+                    added_actors[0].append(Bullet(ship1.pos, scaler_vec_mul(game.BULLET_SPEED,
+                                                                      (-math.sin(2*ship1.angle*math.pi/360),
+                                                                       -math.cos(2*ship1.angle*math.pi/360)))))
                     
 
                 

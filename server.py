@@ -2,25 +2,30 @@ import pygame
 import socket
 from src.game import *
 import threading
+import sys
 
 HOST = "25.57.220.62"  # Standard loopback interface address (localhost)
 PORT = 65433  # Port to listen on (non-privileged ports are > 1023)
 
 ships = dict()
+actors = [[]]
 print("server starting")
+MAX_DATA_RESEVE = 1024
 
 def main_thread():
     def worker(conn, identity):
         ships[identity] = Ship((100,100), (0,0), 0).as_json()
         with conn:
             while True:
-                data = conn.recv(1024)
-                msg = data.decode()
-                if msg=="stop":
+                data = b""
+                data = conn.recv(MAX_DATA_RESEVE)
+                if data.decode()=="stop":
                     break
-                ships[identity] = msg
+                msg = json.loads(data.decode())
+                actors[0] = actors[0] +(json.loads(msg["added_actors"]))
+                ships[identity] = msg["ship"]
                 other = list(map(lambda x: ships[x], list(filter(lambda x:x!=identity, ships.keys()))))
-                conn.sendall(json.dumps(other).encode())
+                conn.sendall(json.dumps(other + actors[0]).encode())
         print("disconnecting")
         del ships[identity]
 
@@ -40,6 +45,12 @@ def game():
 threading.Thread(target=main_thread, daemon=True).start()
 #threading.Thread(target=game, deamon=True).start()
 
-
-input()
-
+while True:
+    inp = input()
+    if inp == "shutdown":
+        break
+    if inp == "actors":
+        print(actors[0])
+        print(f"size: {sys.getsizeof(json.dumps(actors[0]).encode())}, {len(actors[0])} actors")
+    if inp == "reset actors":
+        actors[0] = []
