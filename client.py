@@ -18,6 +18,10 @@ MAX_DATA_RESEVE = int(conf_search("MAX_DATA_RESEVE"))
 GALAXY = pygame.image.load("ART/pretty_galaxy.png")
 GALAXY = pygame.transform.scale(GALAXY, (6000,6000))
 
+STARS = pygame.image.load("ART/pretty_star_1.png")
+STARS = pygame.transform.scale(STARS, (6000,6000))
+
+
 def main():
     ship1 =  Ship((100,100), (0,0), 0)
     actors =  [[]] #ugly i know
@@ -59,6 +63,7 @@ def main():
         window.fill((0,0,0))
         window_pos = vec_add(ship1.rect.center, (-WIDTH/2, -HIGHT/2))
         window.blit(GALAXY, scaler_vec_mul(0.2, scaler_vec_mul(-1, vec_add(ship1.pos, (100, 100)))))
+        window.blit(STARS, (scaler_vec_mul(-1, vec_add(ship1.pos, (100,100)))))
         ship1.render_center(TEXTURES[0], window)        
         for i in actors[0]:
             i.render(window_pos, TEXTURES[1], window)
