@@ -7,6 +7,7 @@ import threading
 from conf import *
 from src.game import vec_add, scaler_vec_mul, SIZE, UPDATE_DELAY, TEXTURES, Ship, Bullet, actor_from_json
 import src.game as game
+import itertools
 
 WIDTH, HIGHT = (600,600)
 
@@ -23,6 +24,10 @@ STARS2 = pygame.transform.scale(STARS2, (3000,3000))
 
 STARS1 = pygame.image.load("ART/pretty_star_1.png")
 STARS1 = pygame.transform.scale(STARS1, (3000,3000))
+
+
+STARS3 = pygame.image.load("Art/pretty_stars_3.png")
+STARS3 = pygame.transform.scale(STARS3, (6000*1.25,6000*1.25))
 
 
 def main():
@@ -67,10 +72,12 @@ def main():
         window_pos = vec_add(ship1.rect.center, (-WIDTH/2, -HIGHT/2))
         window.blit(GALAXY, scaler_vec_mul(0.2, scaler_vec_mul(-1, vec_add(ship1.pos, (100, 100)))))
 
-        window.blit(STARS2, (scaler_vec_mul(-0.5, vec_add(ship1.pos, (100,100)))))
-        ship1.render_center(TEXTURES[0], window)
-
-        window.blit(STARS1, (scaler_vec_mul(-1, vec_add(ship1.pos, (100,100)))))
+        window.blit(STARS3, scaler_vec_mul(-0.2*1.25, vec_add(ship1.pos, (100*1.25,100*1.25))))
+        for i in map(lambda x:scaler_vec_mul(6000, x), itertools.product(range(3), range(3))):
+            window.blit(STARS2, (scaler_vec_mul(-0.5, vec_add(ship1.pos, vec_add((100,100), scaler_vec_mul(-1, i))))))
+        
+        for i in map(lambda x:scaler_vec_mul(3000, x), itertools.product(range(10), range(10))):
+                     window.blit(STARS1, (scaler_vec_mul(-1, vec_add(ship1.pos, vec_add((100,100), scaler_vec_mul(-1, i))))))
         ship1.render_center(TEXTURES[0], window)
 
         
