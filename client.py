@@ -73,11 +73,12 @@ def main():
         window.blit(GALAXY, scaler_vec_mul(0.2, scaler_vec_mul(-1, vec_add(ship1.pos, (100, 100)))))
 
         window.blit(STARS3, scaler_vec_mul(-0.2*1.25, vec_add(ship1.pos, (100*1.25,100*1.25))))
-        for i in map(lambda x:scaler_vec_mul(6000, x), itertools.product(range(3), range(3))):
+        for i in map(lambda x:scaler_vec_mul(6000, x), itertools.product(range(5), range(5))):
             window.blit(STARS2, (scaler_vec_mul(-0.5, vec_add(ship1.pos, vec_add((100,100), scaler_vec_mul(-1, i))))))
         
         for i in map(lambda x:scaler_vec_mul(3000, x), itertools.product(range(10), range(10))):
-                     window.blit(STARS1, (scaler_vec_mul(-1, vec_add(ship1.pos, vec_add((100,100), scaler_vec_mul(-1, i))))))
+                     if (ship1.rect.center[0] - (i[0] + 1500))**2 + (ship1.rect.center[1] - (i[1] + 1500))**2 < (1.5*3000)**2:
+                         window.blit(STARS1, (scaler_vec_mul(-1, vec_add(ship1.pos, vec_add((100,100), scaler_vec_mul(-1, i))))))
         ship1.render_center(TEXTURES[0], window)
 
         
