@@ -40,15 +40,21 @@ class Ship:
     def rect(self):
         return pygame.Rect(self.pos, (SIZE, SIZE))
 
-    def render(self, texture, window):
+    def render(self, window_pos, texture, window):
         tex = pygame.transform.rotate(texture, self.angle)
         rec = tex.get_rect()
         rec.center = self.rect.center
+        window.blit(tex, vec_add(rec.topleft, scaler_vec_mul(-1, window_pos)))
+    
+    def render_center(self, texture, window):
+        tex = pygame.transform.rotate(texture, self.angle)
+        rec = tex.get_rect()
+        rec.center = (300,300)
         window.blit(tex, rec.topleft)
-
+        
     def update(self, delta_time):
         self.pos = vec_add(self.pos, scaler_vec_mul(delta_time, self.velocity))
-        self.pos = (self.pos[0]%600, self.pos[1]%600)
+        #self.pos = (self.pos[0]%600, self.pos[1]%600)
 
     def accel(self, ammount, delta_time):
         self.velocity = vec_add(self.velocity, (-delta_time*ammount*math.sin(math.pi*2*self.angle/360),
