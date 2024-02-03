@@ -43,7 +43,7 @@ def game():
     pass
             
 threading.Thread(target=main_thread, daemon=True).start()
-#threading.Thread(target=game, deamon=True).start()
+threading.Thread(target=game, daemon=True).start()
 
 while True:
     inp = input()

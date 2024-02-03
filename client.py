@@ -8,10 +8,15 @@ from conf import *
 from src.game import vec_add, scaler_vec_mul, SIZE, UPDATE_DELAY, TEXTURES, Ship, Bullet, actor_from_json
 import src.game as game
 
-if __name__ == "__main__":
-    window = pygame.display.set_mode((600,600)) 
+WIDTH, HIGHT = (600,600)
 
-MAX_DATA_RESEVE = 1024
+if __name__ == "__main__":
+    window = pygame.display.set_mode((WIDTH, HIGHT)) 
+
+MAX_DATA_RESEVE = int(conf_search("MAX_DATA_RESEVE"))
+
+GALAXY = pygame.image.load("ART/pretty_galaxy.png")
+GALAXY = pygame.transform.scale(GALAXY, (6000,6000))
 
 def main():
     ship1 =  Ship((100,100), (0,0), 0)
@@ -52,9 +57,11 @@ def main():
             i.update(delta_time)
     
         window.fill((0,0,0))
-        ship1.render(TEXTURES[0], window)
+        window_pos = vec_add(ship1.rect.center, (-WIDTH/2, -HIGHT/2))
+        window.blit(GALAXY, scaler_vec_mul(0.2, scaler_vec_mul(-1, vec_add(ship1.pos, (100, 100)))))
+        ship1.render_center(TEXTURES[0], window)        
         for i in actors[0]:
-            i.render(TEXTURES[1], window)
+            i.render(window_pos, TEXTURES[1], window)
         pygame.display.update()
 
         events = pygame.event.get()
