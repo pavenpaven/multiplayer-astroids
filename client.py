@@ -16,13 +16,13 @@ if __name__ == "__main__":
 
 MAX_DATA_RESEVE = int(conf_search("MAX_DATA_RESEVE"))
 
-GALAXY = pygame.image.load("ART/pretty_galaxy.png")
+GALAXY = pygame.image.load("Art/pretty_galaxy.png")
 GALAXY = pygame.transform.scale(GALAXY, (6000,6000))
 
-STARS2 = pygame.image.load("ART/pretty_stars_2.png")
+STARS2 = pygame.image.load("Art/pretty_stars_2.png")
 STARS2 = pygame.transform.scale(STARS2, (6000,6000))
 
-STARS1 = pygame.image.load("ART/pretty_star_1.png")
+STARS1 = pygame.image.load("Art/pretty_star_1.png")
 STARS1 = pygame.transform.scale(STARS1, (3000,3000))
 
 
