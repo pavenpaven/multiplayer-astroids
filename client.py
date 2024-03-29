@@ -20,7 +20,7 @@ GALAXY = pygame.image.load("ART/pretty_galaxy.png")
 GALAXY = pygame.transform.scale(GALAXY, (6000,6000))
 
 STARS2 = pygame.image.load("ART/pretty_stars_2.png")
-STARS2 = pygame.transform.scale(STARS2, (3000,3000))
+STARS2 = pygame.transform.scale(STARS2, (6000,6000))
 
 STARS1 = pygame.image.load("ART/pretty_star_1.png")
 STARS1 = pygame.transform.scale(STARS1, (3000,3000))
@@ -73,9 +73,13 @@ def main():
         window.blit(GALAXY, scaler_vec_mul(0.2, scaler_vec_mul(-1, vec_add(ship1.pos, (100, 100)))))
 
         window.blit(STARS3, scaler_vec_mul(-0.2*1.25, vec_add(ship1.pos, (100*1.25,100*1.25))))
-        for i in map(lambda x:scaler_vec_mul(6000, x), itertools.product(range(5), range(5))):
-            window.blit(STARS2, (scaler_vec_mul(-0.5, vec_add(ship1.pos, vec_add((100,100), scaler_vec_mul(-1, i))))))
-        
+        #for i in map(lambda x:scaler_vec_mul(6000, x), itertools.product(range(1), range(1))):
+        #    window.blit(STARS2, (scaler_vec_mul(-0.2*1.25, vec_add(ship1.pos, vec_add((100,100), scaler_vec_mul(-1, i))))))
+
+        for i in map(lambda x:scaler_vec_mul(3000, x), itertools.product(range(10), range(10))):
+                     if (ship1.rect.center[0] - (i[0] + 1500))**2 + (ship1.rect.center[1] - (i[1] + 1500))**2 < (1.5*3000)**2:
+                         window.blit(STARS1, (scaler_vec_mul(-0.7, vec_add(ship1.pos, vec_add((100,100), scaler_vec_mul(-1, i))))))               
+            
         for i in map(lambda x:scaler_vec_mul(3000, x), itertools.product(range(10), range(10))):
                      if (ship1.rect.center[0] - (i[0] + 1500))**2 + (ship1.rect.center[1] - (i[1] + 1500))**2 < (1.5*3000)**2:
                          window.blit(STARS1, (scaler_vec_mul(-1, vec_add(ship1.pos, vec_add((100,100), scaler_vec_mul(-1, i))))))
