@@ -21,14 +21,15 @@ GALAXY = pygame.transform.scale(GALAXY, (6000,6000))
 
 STARS2 = pygame.image.load("Art/pretty_stars_2.png")
 STARS2 = pygame.transform.scale(STARS2, (6000,6000))
+STARS2.set_alpha(0)
 
 STARS1 = pygame.image.load("Art/pretty_star_1.png")
 STARS1 = pygame.transform.scale(STARS1, (3000,3000))
-
+STARS1.set_alpha(0)
 
 STARS3 = pygame.image.load("Art/pretty_stars_3.png")
 STARS3 = pygame.transform.scale(STARS3, (6000*1.25,6000*1.25))
-
+#STARS3.set_alpha(200)
 
 def main():
     ship1 =  Ship((100,100), (0,0), 0)
@@ -37,13 +38,13 @@ def main():
     running = True
     clock = pygame.time.Clock()
     framecount = 0
-
     def client():
         HOST = conf_search("HOST_NAME")  # The server's hostname or IP address 
-        PORT = int(conf_search("PORT"))  # The port useed by the server 
-
+        PORT = int(conf_search("PORT"))  # The port useed by the server
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s: 
             s.connect((HOST, PORT))
+            s.sendall(str(time.time()).encode())
+            print(s.recv(MAX_DATA_RESEVE).decode())
             while running:
                 time.sleep(UPDATE_DELAY)
                 added_actors_json = json.dumps(list(map(lambda x: x.as_json(), added_actors[0])))

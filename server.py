@@ -3,6 +3,7 @@ import socket
 from src.game import *
 import threading
 import sys
+import time
 
 HOST = "25.57.220.62"  # Standard loopback interface address (localhost)
 PORT = 65433  # Port to listen on (non-privileged ports are > 1023)
@@ -15,6 +16,11 @@ MAX_DATA_RESEVE = 1024
 def main_thread():
     def worker(conn, identity):
         ships[identity] = Ship((100,100), (0,0), 0).as_json()
+        t = b""
+        t = conn.recv(MAX_DATA_RESEVE)
+        delay = time.time() - float(t.decode())
+        print(delay)
+        conn.sendall(str(delay).encode())
         with conn:
             while True:
                 data = b""
@@ -49,8 +55,10 @@ while True:
     inp = input()
     if inp == "shutdown":
         break
-    if inp == "actors":
+    elif inp == "actors":
         print(actors[0])
         print(f"size: {sys.getsizeof(json.dumps(actors[0]).encode())}, {len(actors[0])} actors")
-    if inp == "reset actors":
+    elif inp == "reset actors":
         actors[0] = []
+    else:
+        print(f"{inp}")
